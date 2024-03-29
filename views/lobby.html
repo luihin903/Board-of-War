@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset = "UTF-8">
+        <title>Board of War</title>
+        <link rel = "stylesheet" href ="lobby.css">
+        <script src = 'lobby.js' defer></script>
+    </head>
+
+    <body>
+
+
+
+        <nav>
+            <button onclick = "create()">Create Room</button>
+        </nav>
+
+        <main>
+
+        </main>
+
+        <form action = "http://localhost:3000/create" method = "post">
+
+            <div>
+                <span>Room Name: </span>
+                <input type = "text" name = "name" required>
+            </div>
+            <br>
+            <button>Create</button>
+
+        </form>
+
+    </body>
+
+</html>
