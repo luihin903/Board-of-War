@@ -20,15 +20,27 @@
 
         </main>
 
-        <form action = "http://localhost:3000/create" method = "post">
-
-            <div>
-                <span>Room Name: </span>
-                <input type = "text" name = "name" required>
-            </div>
+        <form id = "create" action = "http://localhost:3000/room/create" method = "post">
+            <table>
+                <tr>
+                    <td>Room Name: </td>
+                    <td><input type = "text" name = "room" required></td>
+                </tr>
+                <tr>
+                    <td>Player Name: </td>
+                    <td><input type = "text" name = "player" required></td>
+                </tr>
+            </table>
             <br>
             <button>Create</button>
 
+        </form>
+
+        <form id = "join" action = "http://localhost:3000/room/join" method = "post">
+            <input id = "room" name = "room" style = "position: absolute; visibility: hidden;">
+            <span>Player Name: </span>
+            <input type = "text" name = "player" required>
+            <button>Join</button>
         </form>
 
     </body>

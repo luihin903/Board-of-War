@@ -1,5 +1,7 @@
+nav = document.getElementsByTagName("nav")[0];
 main = document.getElementsByTagName("main")[0];
-form = document.getElementsByTagName("form")[0];
+createForm = document.getElementById("create");
+joinForm = document.getElementById("join");
 rooms = [];
 
 fetch("http://localhost:3000/api/rooms")
@@ -8,25 +10,56 @@ fetch("http://localhost:3000/api/rooms")
         rooms = data["rooms"];
         console.log(rooms);
         if (rooms.length == 0) {
-            main.innerHTML = "no room";
+            main.innerHTML = "&#8593; no room, create one";
             return;
         }
         for (room of rooms) {
             var section = document.createElement("section");
             var name = document.createElement("p");
+            var players = document.createElement("p");
+
             name.innerHTML = room.name;
+            players.innerHTML = `${room.players.length}/2`;
+            section.id = room.id;
+            name.id = room.id;
+            players.id = room.id;
+            players.style.textAlign = "right";
+            section.addEventListener("click", join);
+            
             section.appendChild(name);
+            section.appendChild(players);
             main.appendChild(section);
         }
     })
 
 function create() {
 
-    form.style.visibility = "visible";
-    form.style.left = `${window.innerWidth / 2 - form.offsetWidth / 2}px`;
-    form.style.top = `${window.innerHeight / 2 - form.offsetHeight / 2}px`;
+    createForm.style.visibility = "visible";
+    console.log(createForm);
+    createForm.style.left = `${window.innerWidth / 2 - createForm.offsetWidth / 2}px`;
+    createForm.style.top = `${window.innerHeight / 2 - createForm.offsetHeight / 2}px`;
 
-    document.getElementsByTagName("nav")[0].classList.add("blur");
+    nav.classList.add("blur");
     main.classList.add("blur");
 
+}
+
+function join(event) {
+    for (var room of rooms) {
+        if (room.id == Number(event.target.id)) {
+            if (room.players.length >= 2) {
+                alert(`Room ${room.name} is full.`);
+                return;
+            }
+        }
+    }
+
+    document.getElementById("room").value = event.target.id;
+
+    joinForm.style.visibility = "visible";
+    joinForm.style.left = `${window.innerWidth / 2 - joinForm.offsetWidth / 2}px`;
+    joinForm.style.top = `${window.innerHeight / 2 - joinForm.offsetHeight / 2}px`;
+
+    nav.classList.add("blur");
+    main.classList.add("blur");
 }

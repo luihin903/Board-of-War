@@ -9,6 +9,7 @@ html {
 
 button, input {
     font-size: 32px;
+    padding: 16px;
 }
 
 section {
@@ -17,6 +18,11 @@ section {
     border-radius: 16px;
     margin: auto;
     margin-top: 16px;
+    cursor: pointer;
+}
+
+p {
+    margin: 0px;
 }
 
 form {
