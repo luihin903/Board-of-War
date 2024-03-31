@@ -1,4 +1,48 @@
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 header > span.player {
     border: 1px solid black;
     border-radius: 8px;
+    padding: 4px;
+    margin-left: 4px;
+}
+
+table {
+    text-align: left;
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+}
+
+#cards > tbody > tr > td {
+    border: none;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 8px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+p {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    vertical-align: auto;
+}
+
+img {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    margin: 0;
+    padding: 0;
+    margin-top: 2px;
 }

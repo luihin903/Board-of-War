@@ -5,6 +5,7 @@ module.exports =  class Room {
     id;
     name;
     players;
+    board = [[], [], [], [], [], [], [], [], []];
     static rooms = [];
 
     constructor(name) {
