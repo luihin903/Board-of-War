@@ -6,7 +6,7 @@ var board = getE("board");
 var spawn;
 var cards = getE("cards");
 var message = getE("message");
-var ready = getE("ready");
+var actions = getE("actions");
 var table = {
     move : getE("move"),
     attack : getE("attack"),
@@ -108,9 +108,7 @@ function ready() {
         .then(response => response.json())
         .then(data => {
             room = data.room;
-            message.innerHTML = "Combat Stage";
-            cards.style.visibility = "hidden";
-            ready.style.visibility = "hidden";
+            setCombat();
         })
 }
 
@@ -175,4 +173,27 @@ function init() {
     spawn = document.querySelector("[data-x = '4'][data-y = '8'");
     spawn.classList.add("this");
     spawn.classList.add("spawn");
+}
+
+function setCombat() {
+    message.innerHTML = "Combat Stage";
+    cards.style.visibility = "hidden";
+    getE("ready").style.visibility = "hidden";
+    board.classList.remove("prepare");
+    board.classList.add("combat");
+    actions.style.visibility = "visible";
+}
+
+function act(target) {
+    if (player.actions[target] <= 0) {
+        alert(`You have no ${target} card.`);
+        return;
+    }
+}
+
+function place(target) {
+    if (player.units[target] <= 0) {
+        alert(`You have no ${target} card.`);
+        return;
+    }
 }

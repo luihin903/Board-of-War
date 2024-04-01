@@ -47,10 +47,27 @@ img {
     margin-top: 2px;
 }
 
-#board {
+#board.prepare {
     position: absolute;
-    top: 0;
+    top: 2%;
     left: 24%;
+}
+
+#board.combat {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+}
+
+#actions {
+    visibility: hidden;
+    position: absolute;
+    left: 16%;
+    bottom: 2%;
+}
+
+#actions > tbody > tr > td {
+    border: none;
 }
 
 .cell {

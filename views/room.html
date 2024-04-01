@@ -44,7 +44,7 @@
 
             <button id = "ready" onclick = "ready()">Ready</button>
 
-            <table id = "board"></table>
+            <table id = "board" class = "prepare"></table>
 
             <table id = "cards" style = "position: absolute; right: 0; bottom: 0;">
                 
@@ -138,6 +138,46 @@
                             <p>Source</p>
                             <img src = "../assets/Forest.png">
                             <p>Forest</p>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+
+            <table id = "actions">
+                <tr>
+                    <td>
+                        <button onclick = "act('move')">
+                            <p>Action</p>
+                            <img src = "../assets/Move.png">
+                            <p>Move</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "act('attack')">
+                            <p>Action</p>
+                            <img src = "../assets/Attack.png">
+                            <p>Attack</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "place('fighter')">
+                            <p>Unit</p>
+                            <img src = "../assets/Fighter.png">
+                            <p>Fighter</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "place('archer')">
+                            <p>Unit</p>
+                            <img src = "../assets/Archer.png">
+                            <p>Archer</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "place('cavalry')">
+                            <p>Unit</p>
+                            <img src = "../assets/Cavalry.png">
+                            <p>Cavalry</p>
                         </button>
                     </td>
                 </tr>
