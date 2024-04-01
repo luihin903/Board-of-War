@@ -13,6 +13,7 @@
 
         <header>
             <p id = "message"></p>
+            <br><br>
             <span>Players: </span>
         </header>
 
@@ -30,31 +31,92 @@
                 <tr><td>Farm</td><td id = "farm"></td></tr>
                 <tr><td>Mine</td><td id = "mine"></td></tr>
                 <tr><td>Forest</td><td id = "forest"></td></tr>
+
+                <tr><th>Actions</th><th>Amount</th></tr>
+                <tr><td>Move</td><td id = "move"></td></tr>
+                <tr><td>Attack</td><td id = "attack"></td></tr>
+
+                <tr><th>Units</th><th>Amount</th></tr>
+                <tr><td>Fighter</td><td id = "fighter"></td></tr>
+                <tr><td>Archer</td><td id = "archer"></td></tr>
+                <tr><td>Cavalry</td><td id = "cavalry"></td></tr>
             </table>
 
             <button id = "ready" onclick = "ready()">Ready</button>
 
             <table id = "board"></table>
 
-            <table id = "cards" style = "position: absolute; right: 0; top: 0;">
+            <table id = "cards" style = "position: absolute; right: 0; bottom: 0;">
+                
                 <tr>
                     <td>
-                        
-                    </td>
-                    <td>
-                        <button onclick = "buy('resident')">
-                            <p>Source</p>
-                            <img src = "../assets/Resident.png">
-                            <p>Resident</p>
+                        <button onclick = "buy('move')">
+                            <p>Action</p>
+                            <img src = "../assets/Move.png">
+                            <p>Move</p>
                         </button>
                     </td>
+                    <td>
+                        <button onclick = "buy('fighter')">
+                            <p>Unit</p>
+                            <img src = "../assets/Fighter.png">
+                            <p>Fighter</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "buy('archer')">
+                            <p>Unit</p>
+                            <img src = "../assets/Archer.png">
+                            <p>Archer</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "buy('cavalry')">
+                            <p>Unit</p>
+                            <img src = "../assets/Cavalry.png">
+                            <p>Cavalry</p>
+                        </button>
+                    </td>
+
                 </tr>
+                
                 <tr>
+                    <td>
+                        <button onclick = "buy('attack')">
+                            <p>Action</p>
+                            <img src = "../assets/Attack.png">
+                            <p>Attack</p>
+                        </button>
+                    </td>
                     <td>
                         <button onclick = "buy('food')">
                             <p>Resource</p>
                             <img src = "../assets/Food.png">
                             <p>Food</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "buy('metal')">
+                            <p>Resource</p>
+                            <img src = "../assets/Metal.png">
+                            <p>Metal</p>
+                        </button>
+                    </td>
+                    <td>
+                        <button onclick = "buy('wood')">
+                            <p>Resource</p>
+                            <img src = "../assets/Wood.png">
+                            <p>Wood</p>
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <button onclick = "buy('resident')">
+                            <p>Source</p>
+                            <img src = "../assets/Resident.png">
+                            <p>Resident</p>
                         </button>
                     </td>
                     <td>
@@ -64,29 +126,11 @@
                             <p>Farm</p>
                         </button>
                     </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button onclick = "buy('metal')">
-                            <p>Resource</p>
-                            <img src = "../assets/Metal.png">
-                            <p>Metal</p>
-                        </button>
-                    </td>
                     <td>
                         <button onclick = "buy('mine')">
                             <p>Source</p>
                             <img src = "../assets/mine.png">
                             <p>mine</p>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button onclick = "buy('wood')">
-                            <p>Resource</p>
-                            <img src = "../assets/Wood.png">
-                            <p>Wood</p>
                         </button>
                     </td>
                     <td>

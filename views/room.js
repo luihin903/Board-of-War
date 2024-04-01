@@ -6,7 +6,11 @@ var board = getE("board");
 var spawn;
 var cards = getE("cards");
 var message = getE("message");
+var ready = getE("ready");
 var table = {
+    move : getE("move"),
+    attack : getE("attack"),
+
     money : getE("money"),
     food : getE("food"),
     metal : getE("metal"),
@@ -15,16 +19,28 @@ var table = {
     resident : getE("resident"),
     farm : getE("farm"),
     mine : getE("mine"),
-    forest : getE("forest")
+    forest : getE("forest"),
+
+    fighter : getE("fighter"),
+    archer : getE("archer"),
+    cavalry : getE("cavalry")
 }
 var prices = {
+    move : { money : 1 },
+    attack : { money : 1 },
+
     food : { money : 1 },
     metal : { money : 1 },
     wood : { money : 1 },
+
     resident : { money : 1 , metal : 1 , wood : 1},
     farm : { money : 1 , wood : 1},
     mine : { money : 1 , wood : 1 },
-    forest : { money : 1 }
+    forest : { money : 1 },
+
+    fighter : { money : 1 , food : 1 },
+    archer : { money : 1 , wood : 1 },
+    cavalry : { money : 1 , metal : 1 }
 }
 
 
@@ -45,6 +61,13 @@ function updateValue() {
     table.farm.innerHTML = player.sources.farm;
     table.mine.innerHTML = player.sources.mine;
     table.forest.innerHTML = player.sources.forest;
+
+    table.move.innerHTML = player.actions.move;
+    table.attack.innerHTML = player.actions.attack;
+
+    table.fighter.innerHTML = player.units.fighter;
+    table.archer.innerHTML = player.units.archer;
+    table.cavalry.innerHTML = player.units.cavalry;
 }
 
 function buy(target) {
@@ -59,19 +82,24 @@ function buy(target) {
         player.resources[resource] -= prices[target][resource];
     }
 
-    if (player.resources[target] != undefined) {
+    if (player.actions[target] != undefined) {
+        player.actions[target] ++;
+    }
+    else if (player.resources[target] != undefined) {
         player.resources[target] ++;
     }
-    if (player.sources[target] != undefined) {
+    else if (player.sources[target] != undefined) {
         player.sources[target] ++;
+    }
+    else if (player.units[target] != undefined) {
+        player.units[target] ++;
     }
 
     updateValue();
 }
 
 function ready() {
-    message.innerHTML = "Waiting for opponent to be ready..."
-    message.style.visibility = "visible";
+    message.innerHTML = "Waiting for opponent to be ready...";
     fetch("http://localhost:3000/room/ready", {
         method : "post",
         headers : { "Content-Type" : "application/json" },
@@ -80,8 +108,9 @@ function ready() {
         .then(response => response.json())
         .then(data => {
             room = data.room;
-            message.style.visibility = "hidden";
+            message.innerHTML = "Combat Stage";
             cards.style.visibility = "hidden";
+            ready.style.visibility = "hidden";
         })
 }
 
@@ -92,8 +121,6 @@ function init() {
         .then(data => {
             room = data.room;
             player = data.player;
-            console.log(room);
-            console.log(player);
             document.getElementsByTagName("title")[0].innerHTML = room.name;
 
             updateValue();
@@ -106,7 +133,7 @@ function init() {
             }
             if (room.players.length < 2) {
                 message.innerHTML = "Waiting for player to join...";
-                message.style.visibility = "visible";
+                main.classList.add("blur");
                 fetch("http://localhost:3000/room/wait", {
                     method : "post",
                     headers : { "Content-Type" : "application/json" },
@@ -119,8 +146,12 @@ function init() {
                         span.innerHTML = room.players[1].name;
                         span.classList.add("player");
                         header.appendChild(span);
-                        message.style.visibility = "hidden";
+                        message.innerHTML = "Prepare Stage";
+                        main.classList.remove("blur");
                     })
+            }
+            else {
+                message.innerHTML = "Prepare Stage";
             }
         })
 

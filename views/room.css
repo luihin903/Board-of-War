@@ -75,12 +75,24 @@ img {
 }
 
 #message {
-    position: absolute;
     border: 1px solid black;
     border-radius: 16px;
     font-size: 32px;
     padding: 8px;
-    visibility: hidden;
+    margin-bottom: 8px;
     background-color: white;
     z-index: 10;
+    display: inline;
+    text-align: left;
+    position: relative;
+}
+
+#ready {
+    font-size: 32px;
+    padding: 8px;
+}
+
+.blur {
+    filter: blur(5px);
+    pointer-events: none;
 }
