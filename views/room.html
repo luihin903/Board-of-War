@@ -12,6 +12,7 @@
     <body>
 
         <header>
+            <p id = "message"></p>
             <span>Players: </span>
         </header>
 
@@ -30,6 +31,10 @@
                 <tr><td>Mine</td><td id = "mine"></td></tr>
                 <tr><td>Forest</td><td id = "forest"></td></tr>
             </table>
+
+            <button id = "ready" onclick = "ready()">Ready</button>
+
+            <table id = "board"></table>
 
             <table id = "cards" style = "position: absolute; right: 0; top: 0;">
                 <tr>
@@ -93,9 +98,6 @@
                     </td>
                 </tr>
             </table>
-
-
-
 
         </main>
 

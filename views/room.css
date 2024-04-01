@@ -46,3 +46,41 @@ img {
     padding: 0;
     margin-top: 2px;
 }
+
+#board {
+    position: absolute;
+    top: 0;
+    left: 24%;
+}
+
+.cell {
+    margin: 0;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+}
+
+/* .cell img {
+    display: block;
+    margin: 0;
+    border: none;
+} */
+
+.this.spawn {
+    background-color: rgb(100, 250, 0);
+}
+
+.other.spawn {
+    background-color: red;
+}
+
+#message {
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 16px;
+    font-size: 32px;
+    padding: 8px;
+    visibility: hidden;
+    background-color: white;
+    z-index: 10;
+}

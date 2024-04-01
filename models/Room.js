@@ -1,17 +1,18 @@
 var count = 0;
 
-module.exports =  class Room {
+module.exports = class Room {
+
+    static rooms = [];
 
     id;
     name;
-    players;
+    players = [];
     board = [[], [], [], [], [], [], [], [], []];
-    static rooms = [];
+    ready = 0;
 
     constructor(name) {
         this.id = ++ count;
         this.name = name;
-        this.players = [];
     }
 
     static find(id) {
@@ -22,6 +23,27 @@ module.exports =  class Room {
             if (room.id == id) {
                 return room;
             }
+        }
+    }
+
+    static getIndex(id) {
+        if (typeof id == "string") {
+            id = Number(id);
+        }
+
+        for (var i = 0; i < this.rooms.length; i ++) {
+            if (this.rooms[i].id == id) {
+                return i;
+            }
+        }
+    }
+
+    updatePlayer(player) {
+        if (player.id == this.players[0]) {
+            this.players[0] = player;
+        }
+        else if (player.id == this.players[1]) {
+            this.players[1] = player;
         }
     }
 
