@@ -4,7 +4,7 @@ createForm = document.getElementById("create");
 joinForm = document.getElementById("join");
 rooms = [];
 
-fetch("http://localhost:3000/api/rooms")
+fetch("http://198.217.116.201/api/rooms")
     .then(response => response.json())
     .then(data => {
         rooms = data["rooms"];
@@ -41,7 +41,7 @@ function create() {
 
     nav.classList.add("blur");
     main.classList.add("blur");
-
+    document.getElementsByTagName("header").classList.add("blur");
 }
 
 function join(event) {
@@ -62,4 +62,5 @@ function join(event) {
 
     nav.classList.add("blur");
     main.classList.add("blur");
+    document.getElementsByTagName("header").classList.add("blur");
 }

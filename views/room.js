@@ -2,11 +2,15 @@ var room;
 var player;
 var header = document.getElementsByTagName("header")[0];
 var main = document.getElementsByTagName("main")[0];
+var body = document.getElementsByTagName("body")[0];
 var board = getE("board");
 var spawn;
+var other;
 var cards = getE("cards");
 var message = getE("message");
 var actions = getE("actions");
+var targetUnit;
+var last = document.getElementsByClassName("last");
 var table = {
     move : getE("move"),
     attack : getE("attack"),
@@ -70,6 +74,23 @@ function updateValue() {
     table.cavalry.innerHTML = player.units.cavalry;
 }
 
+function updateBoard(log) {
+    for (var cell of document.getElementsByClassName("cell")) {
+        cell.innerHTML = "";
+    }
+
+    for (var unit of room.board) {
+        var cell = getCell(unit);
+        cell.innerHTML = `${unit.name}<br>(${unit.hp})`;
+        cell.style.color = (unit.owner == player.id) ? "cyan" : "red";
+    }
+
+    last[0].innerHTML = room.players[0].name;
+    last[1].innerHTML = log[room.players[0].name];
+    last[2].innerHTML = room.players[1].name;
+    last[3].innerHTML = log[room.players[1].name];
+}
+
 function buy(target) {
     for (var resource of Object.keys(prices[target])) {
         if (player.resources[resource] < prices[target][resource]) {
@@ -100,7 +121,8 @@ function buy(target) {
 
 function ready() {
     message.innerHTML = "Waiting for opponent to be ready...";
-    fetch("http://localhost:3000/room/ready", {
+    block();
+    fetch("http://198.217.116.201/room/ready", {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({ room : room.id , player : player })
@@ -114,7 +136,7 @@ function ready() {
 
 function init() {
 
-    fetch("http://localhost:3000/room/init", { method : "get"})
+    fetch("http://198.217.116.201/room/init", { method : "get"})
         .then(response => response.json())
         .then(data => {
             room = data.room;
@@ -129,10 +151,13 @@ function init() {
                 span.classList.add("player");
                 header.appendChild(span);
             }
+
+            body.classList.remove("blur");
+
             if (room.players.length < 2) {
                 message.innerHTML = "Waiting for player to join...";
-                main.classList.add("blur");
-                fetch("http://localhost:3000/room/wait", {
+                block();
+                fetch("http://198.217.116.201/room/wait", {
                     method : "post",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify({ id : room.id })
@@ -145,7 +170,7 @@ function init() {
                         span.classList.add("player");
                         header.appendChild(span);
                         message.innerHTML = "Prepare Stage";
-                        main.classList.remove("blur");
+                        unblock();
                     })
             }
             else {
@@ -168,11 +193,27 @@ function init() {
         board.appendChild(tr);
     }
 
-    document.querySelectorAll("[data-x='4'][data-y='0']")[0].classList.add("other");
-    document.querySelectorAll("[data-x='4'][data-y='0']")[0].classList.add("spawn");
-    spawn = document.querySelector("[data-x = '4'][data-y = '8'");
+    other = getCellByPos(4, 0);
+    other.classList.add("other");
+    getCellByPos(3, 0).style.borderRight = "none";
+    getCellByPos(4, 1).style.borderTop = "none";
+    getCellByPos(5, 0).style.borderLeft = "none";
+    
+    spawn = getCellByPos(4, 8);
     spawn.classList.add("this");
-    spawn.classList.add("spawn");
+    getCellByPos(3, 8).style.borderRight = "none";
+    getCellByPos(4, 7).style.borderBottom = "none";
+    getCellByPos(5, 8).style.borderLeft = "none";
+}
+
+function setPrepare() {
+    player.resources.money += player.sources.resident;
+    player.resources.food += player.sources.farm;
+    player.resources.metal += player.sources.mine;
+    player.resources.wood += player.sources.wood;
+
+    message.innerHTML = "Prepare Stage";
+    unblock();
 }
 
 function setCombat() {
@@ -182,6 +223,35 @@ function setCombat() {
     board.classList.remove("prepare");
     board.classList.add("combat");
     actions.style.visibility = "visible";
+    unblock();
+}
+
+function perform(target) {
+    block();
+    var x = Number(target.dataset.x);
+    var y = Number(player.order == 0 ? target.dataset.y : 8 - target.dataset.y);
+    console.log({ x, y});
+    fetch("http://198.217.116.201/room/move", {
+        method : "post",
+        headers : { "Content-Type" : "application/json" },
+        body : JSON.stringify({
+            unit : targetUnit,
+            player : player,
+            room : room.id,
+            destination : { x, y }
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            room = data.room;
+            updateBoard(data.log);
+            console.log(data.log);
+            if (data.log[player.name] != "Destination Conflict") {
+                player.actions.move --;
+                updateValue();
+            }
+            unblock();
+        })
 }
 
 function act(target) {
@@ -189,6 +259,77 @@ function act(target) {
         alert(`You have no ${target} card.`);
         return;
     }
+
+    if (target == "move") {
+        for (var unit of room.board) {
+            if (unit.owner == player.id) {
+                move();
+                return;
+            }
+        }
+        alert("You have no unit to move.");
+    }
+
+    else if (target == "attack") {
+        for (var unit of room.board) {
+            if (unit.owner == player.id) {
+                attack();
+                return;
+            }
+        }
+        alert("You have no unit to attack.");
+    }
+    
+}
+
+// pick unit to move
+function move() {
+    for (let unit of room.board) {
+        if (unit.owner == player.id) {
+            var cell = getCell(unit);
+            cell.classList.add("select");
+            cell.addEventListener("click", selectTarget, true);
+        }
+    }
+}
+
+function selectTarget(event) {
+    for (var unit of room.board) {
+        if (unit.x == event.target.dataset.x && unit.y == (player.order == 0 ? event.target.dataset.y : 8 - event.target.dataset.y)) {
+            targetUnit = unit;
+        }
+    }
+
+    var cells = document.getElementsByClassName("select");
+    for (var cell of Array.from(cells)) {
+        cell.classList.remove("select");
+        cell.removeEventListener("click", selectTarget, true);
+    }
+    moveTo();
+}
+
+// pick destination to move
+function moveTo() {
+    for (var x = 0; x < 9; x ++) {
+        for (var y = 0; y < 9; y ++) {
+            if (dist(targetUnit, x, y) <= targetUnit.speed) {
+                var cell = getCellByPos(x, player.order == 0 ? y : 8 - y);
+                if (cell.innerHTML == "" && cell != spawn && cell != other) {
+                    cell.classList.add("select");
+                    cell.addEventListener("click", selectDestination, true);
+                }
+            }
+        }
+    }
+}
+
+function selectDestination(event) {
+    var cells = document.getElementsByClassName("select");
+    for (var c of Array.from(cells)) {
+        c.classList.remove("select");
+        c.removeEventListener("click", selectDestination, true);
+    }
+    perform(event.target);
 }
 
 function place(target) {
@@ -196,4 +337,51 @@ function place(target) {
         alert(`You have no ${target} card.`);
         return;
     }
+
+    if (spawn.innerHTML != "") {
+        alert("Your spawn is occupied.");
+        return;
+    }
+
+    player.units[target] --;
+    updateValue();
+    block();
+    message.innerHTML = "Waiting for opponent to action...";
+    fetch("http://198.217.116.201/room/action", {
+        method : "post",
+        headers : { "Content-Type" : "application/json" },
+        body : JSON.stringify({
+            room : room.id,
+            player : player,
+            action : target
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            room = data.room;
+            updateBoard(data.log);
+            message.innerHTML = "Combat Stage";
+            unblock();
+        })
+}
+
+function getCell(unit) {
+    return document.querySelector(`[data-x = '${unit.x}'][data-y = '${player.order == 0 ? unit.y : 8 - unit.y}']`);
+}
+
+function getCellByPos(x, y) {
+    return document.querySelector(`[data-x = '${x}'][data-y = '${y}']`);
+}
+
+// calculate in room pos
+function dist(unit, x, y) {
+    return Math.sqrt((unit.x - x) ** 2 + (unit.y - y) ** 2);
+}
+
+function block() {
+    main.classList.add("blur");
+}
+
+function unblock() {
+    main.classList.remove("blur");
 }

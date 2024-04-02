@@ -5,5 +5,12 @@ module.exports = class Fighter {
     atk = 50;
     speed = 1;
     range = 1;
+    owner; // player id
+    x;
+    y;
+
+    constructor(owner) {
+        this.owner = Number(owner);
+    }
 
 }

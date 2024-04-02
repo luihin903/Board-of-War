@@ -9,12 +9,25 @@
         <script src = "../room.js" defer></script>
     </head>
 
-    <body>
+    <body class = "blur">
 
         <header>
             <p id = "message"></p>
             <br><br>
             <span>Players: </span>
+            <table id = "log" style = "position: absolute; right: 2%; top: 2%">
+                <tr><th>Last Action:</th></tr>
+                <tr>
+                    <td class = "last"></td>
+                    <td>: </td>
+                    <td class = "last"></td>
+                </tr>
+                <tr>
+                    <td class = "last"></td>
+                    <td>: </td>
+                    <td class = "last"></td>
+                </tr>
+            </table>
         </header>
 
         <main>
@@ -43,6 +56,7 @@
             </table>
 
             <button id = "ready" onclick = "ready()">Ready</button>
+            <button id = "no" onclick = "noAction()">No Action</button>
 
             <table id = "board" class = "prepare"></table>
 

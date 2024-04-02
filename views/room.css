@@ -18,6 +18,11 @@ td {
     border: 1px solid black;
 }
 
+#log > tbody > tr > td {
+    border-left: none;
+    border-right: none;
+}
+
 #cards > tbody > tr > td {
     border: none;
 }
@@ -47,22 +52,23 @@ img {
     margin-top: 2px;
 }
 
-#board.prepare {
+#board {
     position: absolute;
-    top: 2%;
-    left: 24%;
+    bottom: 2%;
+    left: 16%;
+    /* transform: translate(-50%, 0); */
 }
 
-#board.combat {
+/* #board.combat {
     position: absolute;
-    top: 2%;
-    right: 2%;
-}
+    top: 5%;
+    left: 20%;
+} */
 
 #actions {
     visibility: hidden;
     position: absolute;
-    left: 16%;
+    right: 2%;
     bottom: 2%;
 }
 
@@ -75,6 +81,7 @@ img {
     padding: 0;
     width: 50px;
     height: 50px;
+    text-align: center;
 }
 
 /* .cell img {
@@ -83,12 +90,12 @@ img {
     border: none;
 } */
 
-.this.spawn {
-    background-color: rgb(100, 250, 0);
+.this {
+    border: 2px solid cyan;
 }
 
-.other.spawn {
-    background-color: red;
+.other {
+    border: 2px solid red;
 }
 
 #message {
@@ -104,12 +111,24 @@ img {
     position: relative;
 }
 
-#ready {
+#ready, #no {
     font-size: 32px;
     padding: 8px;
+    position: absolute;
+    left: 2%;
+    bottom: 2%;
+}
+
+#no {
+    visibility: hidden;
 }
 
 .blur {
     filter: blur(5px);
     pointer-events: none;
+}
+
+td.select {
+    background-color: yellow;
+    cursor: pointer;
 }

@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const port = 3000;
 const app = express();
 const Room = require("./models/Room");
-const Player = require("./models/Player");
 const roomRoutes = require("./routes/room");
 
 app.use(express.static("./views"));

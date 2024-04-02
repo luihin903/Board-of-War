@@ -8,6 +8,10 @@ html {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+h1 {
+    text-align: center;
+}
+
 button, input {
     font-size: 32px;
     padding: 16px;
