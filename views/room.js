@@ -13,6 +13,7 @@ var targetUnit;
 var hp = document.getElementsByClassName("hp");
 var last = document.getElementsByClassName("last");
 var action;
+var no = getE("no");
 var table = {
     move : getE("move"),
     attack : getE("attack"),
@@ -32,21 +33,21 @@ var table = {
     cavalry : getE("cavalry")
 }
 var prices = {
-    move : { money : 1 },
-    attack : { money : 1 },
+    move : { money : 1 , food : 1 , metal : 1 , wood : 1 },
+    attack : { money : 1 , food : 1 , metal : 1 , wood : 1 },
 
     food : { money : 1 },
     metal : { money : 1 },
     wood : { money : 1 },
 
-    resident : { money : 1 , metal : 1 , wood : 1},
-    farm : { money : 1 , wood : 1},
-    mine : { money : 1 , wood : 1 },
-    forest : { money : 1 },
+    resident : { money : 1 , metal : 2 , wood : 2 },
+    farm : { money : 2 , wood : 1 },
+    mine : { money : 2 , wood : 1 },
+    forest : { money : 2 },
 
-    fighter : { money : 1 , food : 1 },
-    archer : { money : 1 , wood : 1 },
-    cavalry : { money : 1 , metal : 1 }
+    fighter : { money : 10 , food : 10 },
+    archer : { money : 10 , wood : 10 },
+    cavalry : { money : 10 , metal : 10 }
 }
 
 
@@ -142,12 +143,13 @@ function ready() {
 }
 
 function init() {
-
+    
     fetch("http://198.217.116.201/room/init", { method : "get"})
         .then(response => response.json())
         .then(data => {
             room = data.room;
             player = data.player;
+            setPrepare();
             document.getElementsByTagName("title")[0].innerHTML = room.name;
 
             updateValue();
@@ -160,7 +162,7 @@ function init() {
             }
 
             body.classList.remove("blur");
-
+            
             if (room.players.length < 2) {
                 message.innerHTML = "Waiting for player to join...";
                 block();
@@ -214,13 +216,22 @@ function init() {
 }
 
 function setPrepare() {
+    for (var unit of room.board) {
+        if (unit.owner == player.id) {
+            player.resources.food --;
+        }
+    }
+
     player.resources.money += player.sources.resident;
     player.resources.food += player.sources.farm;
     player.resources.metal += player.sources.mine;
-    player.resources.wood += player.sources.wood;
+    player.resources.wood += player.sources.forest;
 
     message.innerHTML = "Prepare Stage";
-    unblock();
+    actions.style.visibility = "hidden";
+    no.style.visibility = "hidden";
+    cards.visibility = "visible";
+    getE("ready").visibility = "visible";
 }
 
 function setCombat() {
@@ -230,6 +241,7 @@ function setCombat() {
     board.classList.remove("prepare");
     board.classList.add("combat");
     actions.style.visibility = "visible";
+    no.style.visibility = "visible";
     unblock();
 }
 
@@ -274,6 +286,41 @@ function perform(target) {
 }
 
 function act(target) {
+
+    if (target == "no") {
+        block();
+        fetch("http://198.217.116.201/room/no", {
+            method : "post",
+            headers : { "Content-Type" : "application/json"},
+            body : JSON.stringify({
+                room : room.id,
+                player : player
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                room = data.room;
+                updateBoard(data.log);
+                if (data.log[room.players[0].name] == "No Action" && data.log[room.players[1].name] == "No Action") {
+                    setPrepare();
+                }
+                unblock();
+
+                if (Number(room.players[0].hp) <= 0 && Number(room.players[1].hp) <= 0) {
+                    message.innerHTML = "It is a draw/tie.";
+                    block();
+                }
+                else if (Number(room.players[0].hp) <= 0) {
+                    message.innerHTML = `Congratulations to ${room.players[1].name}!`;
+                    block();
+                }
+                else if (Number(room.players[1].hp) <= 0) {
+                    message.innerHTML = `Congratulations to ${room.players[0].name}!`;
+                    block();
+                }
+            })
+    }
+
     if (player.actions[target] <= 0) {
         alert(`You have no ${target} card.`);
         return;

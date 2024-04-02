@@ -59,6 +59,24 @@ module.exports = class Room {
         var a0 = this.actions[0];
         var a1 = this.actions[1];
 
+        if (a0.action == "no") {
+            this.log[a0.player.name] = "No Action";
+        }
+        if (a1.action == "no") {
+            this.log[a1.player.name] = "No Action";
+        }
+
+        // if (a0.action == "no" && a1.action == "no"){
+        //     for (var unit of this.board) {
+        //         if (unit.owner == this.players[0].id) {
+        //             this.players[0].resources.food --;
+        //         }
+        //         else if (unit.owner == this.players[1].id) {
+        //             this.players[1].resources.food --;
+        //         }
+        //     }
+        // }
+
         if (a0.action == "fighter") {
             this.log[a0.player.name] = "Place Fighter";
             this.place(new Fighter(a0.player.id), a0.player);

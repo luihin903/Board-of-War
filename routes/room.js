@@ -112,4 +112,24 @@ router.post("/perform", async (req, res) => {
     res.json({ room , log });
 })
 
+router.post("/no", async (req, res) => {
+    var id = req.body.id;
+    Room.find(id).updatePlayer(req.body.player);
+    Room.find(id).actions.push({ room });
+
+    // the second player to act
+    if (Room.find(id).actions.length >= 2) {
+        Room.find(id).perform();
+        Room.find(id).actions = [];
+    }
+
+    while (Room.find(id).actions.length > 0) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    var room = Room.find(id);
+    var log = room.log;
+    res.json({ room , log });
+})
+
 module.exports = router;
