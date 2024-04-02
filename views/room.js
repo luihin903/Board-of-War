@@ -232,7 +232,7 @@ function setPrepare() {
     actions.style.visibility = "hidden";
     no.style.visibility = "hidden";
     cards.style.visibility = "visible";
-    getE("ready").visibility = "visible";
+    getE("ready").style.visibility = "visible";
 }
 
 function setCombat() {
