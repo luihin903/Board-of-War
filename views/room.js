@@ -149,7 +149,6 @@ function init() {
         .then(data => {
             room = data.room;
             player = data.player;
-            setPrepare();
             document.getElementsByTagName("title")[0].innerHTML = room.name;
 
             updateValue();
@@ -178,12 +177,12 @@ function init() {
                         span.innerHTML = room.players[1].name;
                         span.classList.add("player");
                         header.appendChild(span);
-                        message.innerHTML = "Prepare Stage";
+                        setPrepare();
                         unblock();
                     })
             }
             else {
-                message.innerHTML = "Prepare Stage";
+                setPrepare();
             }
         })
 
@@ -227,10 +226,12 @@ function setPrepare() {
     player.resources.metal += player.sources.mine;
     player.resources.wood += player.sources.forest;
 
+    updateValue();
+
     message.innerHTML = "Prepare Stage";
     actions.style.visibility = "hidden";
     no.style.visibility = "hidden";
-    cards.visibility = "visible";
+    cards.style.visibility = "visible";
     getE("ready").visibility = "visible";
 }
 

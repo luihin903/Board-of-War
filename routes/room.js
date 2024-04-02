@@ -113,9 +113,10 @@ router.post("/perform", async (req, res) => {
 })
 
 router.post("/no", async (req, res) => {
-    var id = req.body.id;
-    Room.find(id).updatePlayer(req.body.player);
-    Room.find(id).actions.push({ room });
+    var id = req.body.room;
+    var player = req.body.player;
+    Room.find(id).updatePlayer(player);
+    Room.find(id).actions.push({ action : "no" , player });
 
     // the second player to act
     if (Room.find(id).actions.length >= 2) {
