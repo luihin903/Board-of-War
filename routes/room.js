@@ -48,6 +48,7 @@ router.post("/wait", async (req, res) => {
 })
 
 router.post("/ready", async (req, res) => {
+    var id = req.body.id;
     var index = Room.getIndex(req.body.room);
     Room.rooms[index].updatePlayer(req.body.player);
     Room.rooms[index].ready ++;
@@ -56,8 +57,8 @@ router.post("/ready", async (req, res) => {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 
+    Room.rooms[index].ready = 0;
     var room = Room.rooms[index];
-
     res.json({ room });
 })
 
