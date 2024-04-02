@@ -54,7 +54,7 @@ module.exports = class Room {
     }
 
     perform() {
-        console.log("perform");
+        this.ready = 0;
 
         var a0 = this.actions[0];
         var a1 = this.actions[1];

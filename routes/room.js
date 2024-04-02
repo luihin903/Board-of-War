@@ -57,7 +57,6 @@ router.post("/ready", async (req, res) => {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    Room.rooms[index].ready = 0;
     var room = Room.rooms[index];
     res.json({ room });
 })
