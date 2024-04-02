@@ -41,7 +41,7 @@ function create() {
 
     nav.classList.add("blur");
     main.classList.add("blur");
-    document.getElementsByTagName("header").classList.add("blur");
+    document.getElementsByTagName("header")[0].classList.add("blur");
 }
 
 function join(event) {
@@ -62,5 +62,5 @@ function join(event) {
 
     nav.classList.add("blur");
     main.classList.add("blur");
-    document.getElementsByTagName("header").classList.add("blur");
+    document.getElementsByTagName("header")[0].classList.add("blur");
 }

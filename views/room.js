@@ -10,7 +10,9 @@ var cards = getE("cards");
 var message = getE("message");
 var actions = getE("actions");
 var targetUnit;
+var hp = document.getElementsByClassName("hp");
 var last = document.getElementsByClassName("last");
+var action;
 var table = {
     move : getE("move"),
     attack : getE("attack"),
@@ -84,6 +86,11 @@ function updateBoard(log) {
         cell.innerHTML = `${unit.name}<br>(${unit.hp})`;
         cell.style.color = (unit.owner == player.id) ? "cyan" : "red";
     }
+
+    hp[0].innerHTML = room.players[0].name;
+    hp[1].innerHTML = room.players[0].hp;
+    hp[2].innerHTML = room.players[1].name;
+    hp[3].innerHTML = room.players[1].hp;
 
     last[0].innerHTML = room.players[0].name;
     last[1].innerHTML = log[room.players[0].name];
@@ -230,11 +237,11 @@ function perform(target) {
     block();
     var x = Number(target.dataset.x);
     var y = Number(player.order == 0 ? target.dataset.y : 8 - target.dataset.y);
-    console.log({ x, y});
-    fetch("http://198.217.116.201/room/move", {
+    fetch(`http://198.217.116.201/room/perform`, {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({
+            action : action,
             unit : targetUnit,
             player : player,
             room : room.id,
@@ -245,12 +252,24 @@ function perform(target) {
         .then(data => {
             room = data.room;
             updateBoard(data.log);
-            console.log(data.log);
             if (data.log[player.name] != "Destination Conflict") {
-                player.actions.move --;
+                player.actions[action] --;
                 updateValue();
             }
             unblock();
+
+            if (Number(room.players[0].hp) <= 0 && Number(room.players[1].hp) <= 0) {
+                message.innerHTML = "It is a draw/tie.";
+                block();
+            }
+            else if (Number(room.players[0].hp) <= 0) {
+                message.innerHTML = `Congratulations to ${room.players[1].name}!`;
+                block();
+            }
+            else if (Number(room.players[1].hp) <= 0) {
+                message.innerHTML = `Congratulations to ${room.players[0].name}!`;
+                block();
+            }
         })
 }
 
@@ -263,7 +282,8 @@ function act(target) {
     if (target == "move") {
         for (var unit of room.board) {
             if (unit.owner == player.id) {
-                move();
+                action = "move";
+                pick();
                 return;
             }
         }
@@ -273,7 +293,8 @@ function act(target) {
     else if (target == "attack") {
         for (var unit of room.board) {
             if (unit.owner == player.id) {
-                attack();
+                action = "attack";
+                pick();
                 return;
             }
         }
@@ -282,8 +303,15 @@ function act(target) {
     
 }
 
-// pick unit to move
-function move() {
+// pick unit
+function pick() {
+
+    for (var cell of Array.from(document.getElementsByClassName("select"))) {
+        cell.classList.remove("select");
+        cell.removeEventListener("click", selectTarget, true);
+        cell.removeEventListener("click", selectDestination, true);
+    }
+
     for (let unit of room.board) {
         if (unit.owner == player.id) {
             var cell = getCell(unit);
@@ -305,16 +333,17 @@ function selectTarget(event) {
         cell.classList.remove("select");
         cell.removeEventListener("click", selectTarget, true);
     }
-    moveTo();
+    seek();
 }
 
-// pick destination to move
-function moveTo() {
+// pick destination to move/attack
+function seek() {
     for (var x = 0; x < 9; x ++) {
         for (var y = 0; y < 9; y ++) {
-            if (dist(targetUnit, x, y) <= targetUnit.speed) {
+            if (dist(targetUnit, x, y) <= (action == "move" ? targetUnit.speed : targetUnit.range)) {
                 var cell = getCellByPos(x, player.order == 0 ? y : 8 - y);
-                if (cell.innerHTML == "" && cell != spawn && cell != other) {
+
+                if (action == "attack" || (cell.innerHTML == "" && cell != spawn && cell != other)) {
                     cell.classList.add("select");
                     cell.addEventListener("click", selectDestination, true);
                 }

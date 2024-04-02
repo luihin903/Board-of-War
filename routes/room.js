@@ -38,11 +38,12 @@ router.post("/join", (req, res) => {
 })
 
 router.post("/wait", async (req, res) => {
-    var room = Room.find(req.body.id);
-    while (room.players.length < 2) {
+    
+    while (Room.find(req.body.id).players.length < 2) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 
+    var room = Room.find(req.body.id);
     res.json({ room });
 })
 
@@ -51,7 +52,7 @@ router.post("/ready", async (req, res) => {
     Room.rooms[index].updatePlayer(req.body.player);
     Room.rooms[index].ready ++;
 
-    while (Room.rooms[index].ready < 2) {
+    while (Room.find(req.body.room).ready < 2) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 
@@ -75,8 +76,7 @@ router.post("/action", async (req, res) => {
         Room.rooms[index].actions = [];
     }
 
-    //TODO: index might messed up if multiple rooms exist
-    while (Room.rooms[index].actions.length > 0) {
+    while (Room.find(req.body.room).actions.length > 0) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 
@@ -86,14 +86,16 @@ router.post("/action", async (req, res) => {
     res.json({ room , log });
 })
 
-router.post("/move", async (req, res) => {
-    var index = Room.getIndex(req.body.room);
+router.post("/perform", async (req, res) => {
+    var action = req.body.action;
+    var id = req.body.room;
+    var index = Room.getIndex(id);
     var player = req.body.player;
     var unit = req.body.unit;
     var destination = req.body.destination;
     
     Room.rooms[index].updatePlayer(player);
-    Room.rooms[index].actions.push({ action : "move" , player, unit , destination });
+    Room.rooms[index].actions.push({ action : action , player, unit , destination });
 
     // the second player to act
     if (Room.rooms[index].actions.length >= 2) {

@@ -109,6 +109,53 @@ module.exports = class Room {
             this.board[index].y = a1.destination.y;
             this.log[a1.player.name] = `Move ${this.board[index].name}`;
         }
+
+        if (a0.action == "attack") {
+            for (var unit of this.board) {
+                if (unit.x == a0.destination.x && unit.y == a0.destination.y) {
+                    unit.hp -= a0.unit.atk;
+                    var index = this.getUnitIndex(unit);
+                    if (unit.hp <= 0) {
+                        this.board.splice(index, 1);
+                    }
+                    else {
+                        this.board[index] = unit;
+                    }
+                }
+            }
+            if (a0.destination.x == 4) {
+                if (a0.destination.y == 0) {
+                    this.players[1].hp -= a0.unit.atk;
+                }
+                if (a0.destination.y == 8) {
+                    this.players[0].hp -= a0.unit.atk;
+                }
+            }
+            this.log[a0.player.name] = `${a0.unit.name} Attack`;
+        }
+        if (a1.action == "attack") {
+            for (var unit of this.board) {
+                if (unit.x == a1.destination.x && unit.y == a1.destination.y) {
+                    unit.hp -= a1.unit.atk;
+                    var index = this.getUnitIndex(unit);
+                    if (unit.hp <= 0) {
+                        this.board.splice(index, 1);
+                    }
+                    else {
+                        this.board[index] = unit;
+                    }
+                }
+            }
+            if (a1.destination.x == 4) {
+                if (a1.destination.y == 0) {
+                    this.players[1].hp -= a1.unit.atk;
+                }
+                if (a1.destination.y == 8) {
+                    this.players[0].hp -= a1.unit.atk;
+                }
+            }
+            this.log[a1.player.name] = `${a1.unit.name} Attack`;
+        }
     }
 
     place(object, player) {

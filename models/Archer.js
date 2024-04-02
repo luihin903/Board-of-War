@@ -4,7 +4,7 @@ module.exports = class Archer {
     hp = 100;
     atk = 50;
     speed = 1;
-    range = 5;
+    range = 3;
     owner; // player id
     x;
     y;
