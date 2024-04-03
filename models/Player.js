@@ -4,7 +4,7 @@ module.exports = class Player {
 
     id;
     name;
-    hp = 1000;
+    hp = 500;
     order;
 
     actions = { move : 0 , attack : 0 };
