@@ -48,6 +48,7 @@ router.post("/wait", async (req, res) => {
 })
 
 router.post("/ready", async (req, res) => {
+    console.log("req/ready");
     var id = req.body.id;
     var index = Room.getIndex(req.body.room);
     Room.rooms[index].updatePlayer(req.body.player);
@@ -58,6 +59,7 @@ router.post("/ready", async (req, res) => {
     }
 
     var room = Room.rooms[index];
+    console.log("res/ready");
     res.json({ room });
 })
 
