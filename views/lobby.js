@@ -4,7 +4,7 @@ createForm = document.getElementById("create");
 joinForm = document.getElementById("join");
 rooms = [];
 
-fetch("http://198.217.116.201/api/rooms")
+fetch("http://localhost:3000/api/rooms")
     .then(response => response.json())
     .then(data => {
         rooms = data["rooms"];

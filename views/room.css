@@ -115,8 +115,8 @@ img {
     font-size: 32px;
     padding: 8px;
     position: absolute;
-    left: 2%;
-    bottom: 2%;
+    left: 8px;
+    bottom: 8px;
 }
 
 #no {
@@ -131,4 +131,46 @@ img {
 td.select {
     background-color: yellow;
     cursor: pointer;
+}
+
+.amount > tbody > tr > td {
+    border: none;
+}
+
+#cards, #actions {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+}
+
+.Action > button, tr.Action > th {
+    background-color: #FF5555;
+    color: white;
+}
+.Action > button > img, tr.Action > td {
+    background-color: #FFAAAA;
+}
+
+.Unit > button, tr.Unit > th {
+    background-color: #55FFFF;
+    color: black;
+}
+.Unit > button > img, tr.Unit > td {
+    background-color: #AAFFFF;
+}
+
+.Resource > button, tr.Resource > th {
+    background-color: #55FF55;
+    color: black;
+}
+.Resource > button > img, tr.Resource > td {
+    background-color: #AAFFAA;
+}
+
+.Source > button, tr.Source > th {
+    background-color: #5555FF;
+    color: white;
+}
+.Source > button > img, tr.Source > td {
+    background-color: #AAAAFF;
 }

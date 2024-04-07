@@ -135,4 +135,9 @@ router.post("/no", async (req, res) => {
     res.json({ room , log });
 })
 
+router.get("/exit", (req, res) => {
+    console.log("exit");
+    res.json({ msg : "bye" });
+})
+
 module.exports = router;

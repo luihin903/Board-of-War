@@ -1,3 +1,5 @@
+import util from "./util.js";
+
 var room;
 var player;
 var header = document.getElementsByTagName("header")[0];
@@ -53,6 +55,11 @@ var prices = {
 
 init();
 
+window.addEventListener("beforeunload", async () => {
+    const result = await util.get("room/exit")
+    console.log(result);
+})
+
 
 function getE(id) {
     return document.getElementById(id);
@@ -99,7 +106,7 @@ function updateBoard(log) {
     last[3].innerHTML = log[room.players[1].name];
 }
 
-function buy(target) {
+export function buy(target) {
     for (var resource of Object.keys(prices[target])) {
         if (player.resources[resource] < prices[target][resource]) {
             alert(`Not enough ${resource}.`);
@@ -126,11 +133,12 @@ function buy(target) {
 
     updateValue();
 }
+window.buy = buy;
 
 function ready() {
     message.innerHTML = "Waiting for opponent to be ready...";
     block();
-    fetch("http://198.217.116.201/room/ready", {
+    fetch("http://localhost:3000/room/ready", {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({ room : room.id , player : player })
@@ -141,19 +149,20 @@ function ready() {
             setCombat();
         })
 }
+window.ready = ready;
 
 function init() {
     
-    fetch("http://198.217.116.201/room/init", { method : "get"})
+    fetch("http://localhost:3000/room/init", { method : "get"})
         .then(response => response.json())
-        .then(data => {
+        .then(async data => {
             room = data.room;
             player = data.player;
             document.getElementsByTagName("title")[0].innerHTML = room.name;
 
             updateValue();
 
-            for (p of room.players) {
+            for (var p of room.players) {
                 var span = document.createElement("span");
                 span.innerHTML = p.name;
                 span.classList.add("player");
@@ -165,7 +174,7 @@ function init() {
             if (room.players.length < 2) {
                 message.innerHTML = "Waiting for player to join...";
                 block();
-                fetch("http://198.217.116.201/room/wait", {
+                fetch("http://localhost:3000/room/wait", {
                     method : "post",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify({ id : room.id })
@@ -250,7 +259,7 @@ function perform(target) {
     block();
     var x = Number(target.dataset.x);
     var y = Number(player.order == 0 ? target.dataset.y : 8 - target.dataset.y);
-    fetch(`http://198.217.116.201/room/perform`, {
+    fetch(`http://localhost:3000/room/perform`, {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({
@@ -290,7 +299,7 @@ function act(target) {
 
     if (target == "no") {
         block();
-        fetch("http://198.217.116.201/room/no", {
+        fetch("http://localhost:3000/room/no", {
             method : "post",
             headers : { "Content-Type" : "application/json"},
             body : JSON.stringify({
@@ -350,6 +359,7 @@ function act(target) {
     }
     
 }
+window.act = act;
 
 // pick unit
 function pick() {
@@ -424,7 +434,7 @@ function place(target) {
     updateValue();
     block();
     message.innerHTML = "Waiting for opponent to action...";
-    fetch("http://198.217.116.201/room/action", {
+    fetch("http://localhost:3000/room/action", {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({
@@ -441,6 +451,7 @@ function place(target) {
             unblock();
         })
 }
+window.place = place;
 
 function getCell(unit) {
     return document.querySelector(`[data-x = '${unit.x}'][data-y = '${player.order == 0 ? unit.y : 8 - unit.y}']`);
