@@ -138,7 +138,7 @@ window.buy = buy;
 function ready() {
     message.innerHTML = "Waiting for opponent to be ready...";
     block();
-    fetch("http://localhost:3000/room/ready", {
+    fetch("http://board-of-war.luihin903.com/room/ready", {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({ room : room.id , player : player })
@@ -153,7 +153,7 @@ window.ready = ready;
 
 function init() {
     
-    fetch("http://localhost:3000/room/init", { method : "get"})
+    fetch("http://board-of-war.luihin903.com/room/init", { method : "get"})
         .then(response => response.json())
         .then(async data => {
             room = data.room;
@@ -174,7 +174,7 @@ function init() {
             if (room.players.length < 2) {
                 message.innerHTML = "Waiting for player to join...";
                 block();
-                fetch("http://localhost:3000/room/wait", {
+                fetch("http://board-of-war.luihin903.com/room/wait", {
                     method : "post",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify({ id : room.id })
@@ -259,7 +259,7 @@ function perform(target) {
     block();
     var x = Number(target.dataset.x);
     var y = Number(player.order == 0 ? target.dataset.y : 8 - target.dataset.y);
-    fetch(`http://localhost:3000/room/perform`, {
+    fetch(`http://board-of-war.luihin903.com/room/perform`, {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({
@@ -299,7 +299,7 @@ function act(target) {
 
     if (target == "no") {
         block();
-        fetch("http://localhost:3000/room/no", {
+        fetch("http://board-of-war.luihin903.com/room/no", {
             method : "post",
             headers : { "Content-Type" : "application/json"},
             body : JSON.stringify({
@@ -434,7 +434,7 @@ function place(target) {
     updateValue();
     block();
     message.innerHTML = "Waiting for opponent to action...";
-    fetch("http://localhost:3000/room/action", {
+    fetch("http://board-of-war.luihin903.com/room/action", {
         method : "post",
         headers : { "Content-Type" : "application/json" },
         body : JSON.stringify({

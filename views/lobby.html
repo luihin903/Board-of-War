@@ -22,7 +22,7 @@
 
         </main>
 
-        <form id = "create" action = "http://localhost:3000/room/create" method = "post">
+        <form id = "create" action = "http://board-of-war.luihin903.com/room/create" method = "post">
             <table>
                 <tr>
                     <td>Room Name: </td>
@@ -38,12 +38,18 @@
 
         </form>
 
-        <form id = "join" action = "http://localhost:3000/room/join" method = "post">
+        <form id = "join" action = "http://board-of-war.luihin903.com/room/join" method = "post">
             <input id = "room" name = "room" style = "position: absolute; visibility: hidden;">
             <span>Player Name: </span>
             <input type = "text" name = "player" required>
             <button>Join</button>
         </form>
+
+        <footer style = "position: absolute; right: 8px; bottom: 8px;">
+            <a href = "../assets" download = "Rules.pdf">
+                <button>How to play</button>
+            </a>
+        </footer>
 
     </body>
 

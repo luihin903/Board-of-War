@@ -3,7 +3,7 @@ async function get(endpoint) {
     var wait = true;
     var result;
 
-    fetch(`http://localhost:3000/${endpoint}`, {
+    fetch(`http://board-of-war.luihin903.com/${endpoint}`, {
         method : "GET",
     })
         .then(response => response.json())
