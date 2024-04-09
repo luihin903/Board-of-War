@@ -285,6 +285,7 @@ function setCombat() {
 }
 
 function perform(target) {
+    message.innerHTML = "Waiting for opponent to perform...";
     block();
     var x = Number(target.dataset.x);
     var y = Number(player.order == 0 ? target.dataset.y : 8 - target.dataset.y);
@@ -307,6 +308,7 @@ function perform(target) {
                 player.actions[action] --;
                 updateValue();
             }
+            message.innerHTML = "Combat Stage";
             unblock();
 
             if (Number(room.players[0].hp) <= 0 && Number(room.players[1].hp) <= 0) {
@@ -327,6 +329,7 @@ function perform(target) {
 async function act(target) {
 
     if (target == "no") {
+        message.innerHTML = "Waiting for opponent to perform...";
         block();
         fetch("http://board-of-war.luihin903.com/room/no", {
             method : "post",
@@ -343,6 +346,7 @@ async function act(target) {
                 if (data.log[room.players[0].name] == "No Action" && data.log[room.players[1].name] == "No Action") {
                     setPrepare();
                 }
+                message.innerHTML = "Combat Stage";
                 unblock();
 
                 if (Number(room.players[0].hp) <= 0 && Number(room.players[1].hp) <= 0) {
@@ -395,6 +399,7 @@ async function act(target) {
             alert("You have no armor to equip.")
         }
         else {
+            message.innerHTML = "Waiting for opponent to perform...";
             block();
             action = "equip";
             const result = await util.post("room/equip", {
@@ -404,7 +409,9 @@ async function act(target) {
             room = result.room;
             updateBoard(result.log);
             player.actions[action] --;
+            player.items.armor --;
             updateValue();
+            message.innerHTML = "Combat Stage";
             unblock();
 
             if (Number(room.players[0].hp) <= 0 && Number(room.players[1].hp) <= 0) {
