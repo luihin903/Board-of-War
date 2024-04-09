@@ -174,3 +174,11 @@ td.select {
 .Source > button > img, tr.Source > td {
     background-color: #AAAAFF;
 }
+
+.Craft > button {
+    background-color: #FFFF55;
+    color: black;
+}
+.Craft > button > img, tr.Item >td {
+    background-color: #FFFFAA;
+}

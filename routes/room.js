@@ -48,7 +48,6 @@ router.post("/wait", async (req, res) => {
 })
 
 router.post("/ready", async (req, res) => {
-    console.log("req/ready");
     var id = req.body.id;
     var index = Room.getIndex(req.body.room);
     Room.rooms[index].updatePlayer(req.body.player);
@@ -59,7 +58,6 @@ router.post("/ready", async (req, res) => {
     }
 
     var room = Room.rooms[index];
-    console.log("res/ready");
     res.json({ room });
 })
 
@@ -135,8 +133,29 @@ router.post("/no", async (req, res) => {
     res.json({ room , log });
 })
 
+router.post("/equip", async (req, res) => {
+    var id = req.body.room;
+    var index = Room.getIndex(id);
+
+    Room.rooms[index].updatePlayer(req.body.player);
+    Room.rooms[index].actions.push({ action : "equip" , player : req.body.player });
+
+    // the second player to act
+    if (Room.find(id).actions.length >= 2) {
+        Room.find(id).perform();
+        Room.find(id).actions = [];
+    }
+
+    while (Room.find(id).actions.length > 0) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    var room = Room.find(id);
+    var log = room.log;
+    res.json({ room , log });
+})
+
 router.get("/exit", (req, res) => {
-    console.log("exit");
     res.json({ msg : "bye" });
 })
 

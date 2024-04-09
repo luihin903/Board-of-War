@@ -15,25 +15,24 @@
             <p id = "message"></p>
             
             <span>Players: </span>
-            <table id = "log" style = "position: absolute; right: 2%; top: 2%">
+            <table id = "log" style = "position: absolute; right: 2%; top: 2%; visibility: hidden;">
                 <tr>
-                    <th>HP:</th>
-                    <th></th>
-                    <th colspan = "2">Last Action:</th>
+                    <th colspan = "3">HP:</th>
+                    <th colspan = "3">Last Action:</th>
                 </tr>
                 <tr>
-                    <td class = "hp"></td>
+                    <td class = "hp">Player 1</td>
                     <td>: </td>
-                    <td class = "hp"></td>
+                    <td class = "hp">500</td>
 
                     <td class = "last"></td>
                     <td>: </td>
                     <td class = "last"></td>
                 </tr>
                 <tr>
-                    <td class = "hp"></td>
+                    <td class = "hp">Player 2</td>
                     <td>: </td>
-                    <td class = "hp"></td>
+                    <td class = "hp">500</td>
 
                     <td class = "last"></td>
                     <td>: </td>
@@ -60,11 +59,14 @@
                 <tr class = "Action"><th>Actions</th><th>Amount</th></tr>
                 <tr class = "Action"><td>Move</td><td id = "move"></td></tr>
                 <tr class = "Action"><td>Attack</td><td id = "attack"></td></tr>
+                <tr class = "Action"><td>Equip</td><td id = "equip"></td></tr>
                 <tr style = "height: 8px"></tr>
                 <tr class = "Unit"><th>Units</th><th>Amount</th></tr>
                 <tr class = "Unit"><td>Fighter</td><td id = "fighter"></td></tr>
                 <tr class = "Unit"><td>Archer</td><td id = "archer"></td></tr>
                 <tr class = "Unit"><td>Cavalry</td><td id = "cavalry"></td></tr>
+                <tr style = "height: 8px"></tr>
+                <tr class = "Item"><td>Armor</td><td id = "armor"></td></tr>
             </table>
 
             <button id = "ready" onclick = "ready()">Ready</button>
@@ -75,13 +77,7 @@
             <table id = "cards">
                 
                 <tr>
-                    <td class = "Action">
-                        <button onclick = "buy('move')">
-                            <p>Action</p>
-                            <img src = "../assets/Move.png">
-                            <p>Move</p>
-                        </button>
-                    </td>
+                    <td></td>
                     <td class = "Unit">
                         <button onclick = "buy('fighter')">
                             <p>Unit</p>
@@ -103,15 +99,21 @@
                             <p>Cavalry</p>
                         </button>
                     </td>
-
+                    <td class = "Action">
+                        <button onclick = "buy('move')">
+                            <p>Action</p>
+                            <img src = "../assets/Move.png">
+                            <p>Move</p>
+                        </button>
+                    </td>
                 </tr>
                 
                 <tr>
-                    <td class = "Action">
-                        <button onclick = "buy('attack')">
-                            <p>Action</p>
-                            <img src = "../assets/Attack.png">
-                            <p>Attack</p>
+                    <td class = "Craft">
+                        <button onclick = "buy('armor')">
+                            <p>Craft</p>
+                            <img src = "../assets/Craft.png">
+                            <p>Armor</p>
                         </button>
                     </td>
                     <td class = "Resource">
@@ -133,6 +135,13 @@
                             <p>Resource</p>
                             <img src = "../assets/Wood.png">
                             <p>Wood</p>
+                        </button>
+                    </td>
+                    <td class = "Action">
+                        <button onclick = "buy('attack')">
+                            <p>Action</p>
+                            <img src = "../assets/Attack.png">
+                            <p>Attack</p>
                         </button>
                     </td>
                 </tr>
@@ -166,6 +175,13 @@
                             <p>Forest</p>
                         </button>
                     </td>
+                    <td class = "Action">
+                        <button onclick = "buy('equip')">
+                            <p>Action</p>
+                            <img src = "../assets/Armor.png">
+                            <p>Equip</p>
+                        </button>
+                    </td>
                 </tr>
             </table>
 
@@ -185,6 +201,16 @@
                             <p>Attack</p>
                         </button>
                     </td>
+                    <td class = "Action">
+                        <button onclick = "act('equip')">
+                            <p>Action</p>
+                            <img src = "../assets/Armor.png">
+                            <p>Equip</p>
+                        </button>
+                    </td>
+                </tr>
+                
+                <tr>
                     <td class = "Unit">
                         <button onclick = "place('fighter')">
                             <p>Unit</p>

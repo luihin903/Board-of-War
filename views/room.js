@@ -19,6 +19,7 @@ var no = getE("no");
 var table = {
     move : getE("move"),
     attack : getE("attack"),
+    equip : getE("equip"),
 
     money : getE("money"),
     food : getE("food"),
@@ -32,11 +33,14 @@ var table = {
 
     fighter : getE("fighter"),
     archer : getE("archer"),
-    cavalry : getE("cavalry")
+    cavalry : getE("cavalry"),
+
+    armor : getE("armor")
 }
 var prices = {
     move : { money : 1 , food : 1 , metal : 1 , wood : 1 },
     attack : { money : 1 , food : 1 , metal : 1 , wood : 1 },
+    equip : { money : 1 , food : 1 , metal : 1 , wood : 1 },
 
     food : { money : 1 },
     metal : { money : 1 },
@@ -49,16 +53,18 @@ var prices = {
 
     fighter : { money : 10 , food : 10 },
     archer : { money : 10 , wood : 10 },
-    cavalry : { money : 10 , metal : 10 }
+    cavalry : { money : 10 , metal : 10 },
+
+    armor : { money : 5 , metal : 5 }
 }
 
 
 init();
 
-window.addEventListener("beforeunload", async () => {
-    const result = await util.get("room/exit")
-    console.log(result);
-})
+// window.addEventListener("beforeunload", async () => {
+//     const result = await util.get("room/exit")
+//     conole.log(result);
+// })
 
 
 function getE(id) {
@@ -78,10 +84,13 @@ function updateValue() {
 
     table.move.innerHTML = player.actions.move;
     table.attack.innerHTML = player.actions.attack;
+    table.equip.innerHTML = player.actions.equip;
 
     table.fighter.innerHTML = player.units.fighter;
     table.archer.innerHTML = player.units.archer;
     table.cavalry.innerHTML = player.units.cavalry;
+
+    table.armor.innerHTML = player.items.armor;
 }
 
 function updateBoard(log) {
@@ -94,6 +103,8 @@ function updateBoard(log) {
         cell.innerHTML = `${unit.name}<br>(${unit.hp})`;
         cell.style.color = (unit.owner == player.id) ? "cyan" : "red";
     }
+
+    getE("log").style.visibility = "visible";
 
     hp[0].innerHTML = room.players[0].name;
     hp[1].innerHTML = room.players[0].hp;
@@ -114,21 +125,36 @@ export function buy(target) {
         }
     }
 
-    for (var resource of Object.keys(prices[target])) {
-        player.resources[resource] -= prices[target][resource];
-    }
-
     if (player.actions[target] != undefined) {
+        if (player.actions[target] >= 10) {
+            alert(`You can only hold 10 ${target} cards.`);
+            return;
+        }
         player.actions[target] ++;
     }
     else if (player.resources[target] != undefined) {
         player.resources[target] ++;
     }
     else if (player.sources[target] != undefined) {
+        if (player.sources[target] >= 20) {
+            alert(`You can only hold 20 ${target} cards.`);
+            return;
+        }
         player.sources[target] ++;
     }
     else if (player.units[target] != undefined) {
+        if (player.units[target] >= 10) {
+            alert(`You can only hold 10 ${target} cards.`);
+            return;
+        }
         player.units[target] ++;
+    }
+    else if (player.items[target] != undefined) {
+        player.items[target] ++;
+    }
+
+    for (var resource of Object.keys(prices[target])) {
+        player.resources[resource] -= prices[target][resource];
     }
 
     updateValue();
@@ -224,6 +250,9 @@ function init() {
 }
 
 function setPrepare() {
+
+    unSelect();
+
     for (var unit of room.board) {
         if (unit.owner == player.id) {
             player.resources.food --;
@@ -295,7 +324,7 @@ function perform(target) {
         })
 }
 
-function act(target) {
+async function act(target) {
 
     if (target == "no") {
         block();
@@ -357,6 +386,41 @@ function act(target) {
         }
         alert("You have no unit to attack.");
     }
+
+    else if (target == "equip") {
+        if (spawn.innerHTML == "") {
+            alert("You have no unit to equip");
+        }
+        else if (player.items.armor <= 0) {
+            alert("You have no armor to equip.")
+        }
+        else {
+            block();
+            action = "equip";
+            const result = await util.post("room/equip", {
+                player : player,
+                room : room.id
+            })
+            room = result.room;
+            updateBoard(result.log);
+            player.actions[action] --;
+            updateValue();
+            unblock();
+
+            if (Number(room.players[0].hp) <= 0 && Number(room.players[1].hp) <= 0) {
+                message.innerHTML = "It is a draw/tie.";
+                block();
+            }
+            else if (Number(room.players[0].hp) <= 0) {
+                message.innerHTML = `Congratulations to ${room.players[1].name}!`;
+                block();
+            }
+            else if (Number(room.players[1].hp) <= 0) {
+                message.innerHTML = `Congratulations to ${room.players[0].name}!`;
+                block();
+            }
+        }
+    }
     
 }
 window.act = act;
@@ -364,11 +428,7 @@ window.act = act;
 // pick unit
 function pick() {
 
-    for (var cell of Array.from(document.getElementsByClassName("select"))) {
-        cell.classList.remove("select");
-        cell.removeEventListener("click", selectTarget, true);
-        cell.removeEventListener("click", selectDestination, true);
-    }
+    unSelect();
 
     for (let unit of room.board) {
         if (unit.owner == player.id) {
@@ -417,6 +477,14 @@ function selectDestination(event) {
         c.removeEventListener("click", selectDestination, true);
     }
     perform(event.target);
+}
+
+function unSelect() {
+    for (var cell of Array.from(document.getElementsByClassName("select"))) {
+        cell.classList.remove("select");
+        cell.removeEventListener("click", selectTarget, true);
+        cell.removeEventListener("click", selectDestination, true);
+    }
 }
 
 function place(target) {

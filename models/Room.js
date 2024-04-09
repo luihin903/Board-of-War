@@ -66,6 +66,41 @@ module.exports = class Room {
             this.log[a1.player.name] = "No Action";
         }
 
+        if (a0.action == "equip") {
+            this.log[a0.player.name] = "Equip";
+            if (a0.player.id == this.players[0].id) {
+                for (var i = 0; i < this.board.length; i ++) {
+                    if (this.board[i].x == 4 && this.board[i].y == 8) {
+                        this.board[i].hp += 100;
+                    }
+                }
+            }
+            else if (a0.player.id == this.players[1].id) {
+                for (var i = 0; i < this.board.length; i ++) {
+                    if (this.board[i].x == 4 && this.board[i].y == 0) {
+                        this.board[i].hp += 100;
+                    }
+                }
+            }
+        }
+        if (a1.action == "equip") {
+            this.log[a0.player.name] = "Equip";
+            if (a0.player.id == this.players[0].id) {
+                for (var i = 0; i < this.board.length; i ++) {
+                    if (this.board[i].x == 4 && this.board[i].y == 8) {
+                        this.board[i].hp += 100;
+                    }
+                }
+            }
+            else if (a0.player.id == this.players[1].id) {
+                for (var i = 0; i < this.board.length; i ++) {
+                    if (this.board[i].x == 4 && this.board[i].y == 0) {
+                        this.board[i].hp += 100;
+                    }
+                }
+            }
+        }
+
         // if (a0.action == "no" && a1.action == "no"){
         //     for (var unit of this.board) {
         //         if (unit.owner == this.players[0].id) {
@@ -105,8 +140,6 @@ module.exports = class Room {
 
         // if both players want to move to the same location
         if (a0.action == "move" && a1.action == "move") {
-            console.log(JSON.stringify(a0.destination));
-            console.log(JSON.stringify(a1.destination));
             if (JSON.stringify(a0.destination) == JSON.stringify(a1.destination)) {
                 this.log[a0.player.name] = "Destination Conflict";
                 this.log[a1.player.name] = "Destination Conflict";

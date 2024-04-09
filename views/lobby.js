@@ -8,7 +8,6 @@ fetch("http://board-of-war.luihin903.com/api/rooms")
     .then(response => response.json())
     .then(data => {
         rooms = data["rooms"];
-        console.log(rooms);
         if (rooms.length == 0) {
             main.innerHTML = "&#8593; no room, create one";
             return;
@@ -35,7 +34,6 @@ fetch("http://board-of-war.luihin903.com/api/rooms")
 function create() {
 
     createForm.style.visibility = "visible";
-    console.log(createForm);
     createForm.style.left = `${window.innerWidth / 2 - createForm.offsetWidth / 2}px`;
     createForm.style.top = `${window.innerHeight / 2 - createForm.offsetHeight / 2}px`;
 

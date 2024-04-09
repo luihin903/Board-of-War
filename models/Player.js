@@ -7,11 +7,11 @@ module.exports = class Player {
     hp = 500;
     order;
 
-    actions = { move : 0 , attack : 0 };
-    resources = { money : 10 , food : 10 , metal : 10 , wood : 10 };
-    sources = { resident : 1 , farm : 0 , mine : 0 , forest : 0 };
-    actions = { move : 0 , attack : 0 };
+    resources = { money : 15 , food : 15 , metal : 10 , wood : 10 };
+    sources = { resident : 1 , farm : 1 , mine : 0 , forest : 0 };
+    actions = { move : 0 , attack : 0 , equip : 0 };
     units = { fighter : 0 , archer : 0 , cavalry : 0 };
+    items = { armor : 0 };
 
     constructor(name, order) {
         this.id = ++ count;
